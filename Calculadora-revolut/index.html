@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora de Interés Revolut</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 2rem; max-width: 600px; margin: auto; }
+    h1 { text-align: center; }
+    label { font-weight: bold; margin-top: 1rem; display: block; }
+    input, select, button { width: 100%; padding: 0.7rem; margin-top: 0.5rem; border-radius: 8px; border: 1px solid #ccc; }
+    button { background: #007bff; color: white; cursor: pointer; margin-top: 1rem; }
+    .resultado { margin-top: 2rem; background: white; padding: 1rem; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body>
+  <h1>💰 Calculadora de Cuenta Remunerada Revolut</h1>
+
+  <label for="monto">Cantidad a depositar (€):</label>
+  <input type="number" id="monto" placeholder="Ej: 10000" min="0">
+
+  <label for="tiempo">Tiempo (hasta 5 años):</label>
+  <select id="tiempo">
+    <option value="1">1 mes</option>
+    <option value="3">3 meses</option>
+    <option value="6">6 meses</option>
+    <option value="12">1 año</option>
+    <option value="24">2 años</option>
+    <option value="36">3 años</option>
+    <option value="48">4 años</option>
+    <option value="60">5 años</option>
+  </select>
+
+  <label for="plan">Tu plan en Revolut:</label>
+  <select id="plan">
+    <option value="1.50">Estándar / Plus (1.50%)</option>
+    <option value="1.75">Premium (1.75%)</option>
+    <option value="2.25">Metal (2.25%)</option>
+    <option value="2.50">Ultra (2.50%)</option>
+  </select>
+
+  <button onclick="calcular()">Calcular</button>
+
+  <div class="resultado" id="resultado"></div>
+
+  <script>
+    function calcular() {
+      const monto = parseFloat(document.getElementById("monto").value);
+      const meses = parseInt(document.getElementById("tiempo").value);
+      const TIN = parseFloat(document.getElementById("plan").value);
+
+      if (isNaN(monto) || monto <= 0) {
+        document.getElementById("resultado").innerHTML = "Por favor, ingresa una cantidad válida.";
+        return;
+      }
+
+      const dias = meses * 30.44; // promedio mensual
+      const interesBruto = (monto * (TIN / 100) / 365) * dias;
+      const retencion = interesBruto * 0.19; // IRPF 19%
+      const interesNeto = interesBruto - retencion;
+
+      const totalBruto = monto + interesBruto;
+      const totalNeto = monto + interesNeto;
+
+      document.getElementById("resultado").innerHTML = `
+        <p>📅 Periodo: <strong>${meses} meses</strong></p>
+        <p>💸 Interés bruto estimado: <strong>€${interesBruto.toFixed(2)}</strong></p>
+        <p>🧾 Retención IRPF (19%): <strong>-€${retencion.toFixed(2)}</strong></p>
+        <p>✅ Interés neto recibido: <strong>€${interesNeto.toFixed(2)}</strong></p>
+        <hr>
+        <p>💼 Total al final (bruto): <strong>€${totalBruto.toFixed(2)}</strong></p>
+        <p>💼 Total al final (neto): <strong>€${totalNeto.toFixed(2)}</strong></p>
+      `;
+    }
+  </script>
+</body>
+</html>
